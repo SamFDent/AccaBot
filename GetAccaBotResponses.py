@@ -4,13 +4,27 @@ from collections import Counter
 
 # Get the response form data
 preds = getResponseData()
-pp = pprint.PrettyPrinter()
+# pp = pprint.PrettyPrinter()
 # pp.pprint(preds)
 
-# Create dictionary with each Betting Market as a Key, then have a sub-dictionary for each HomeTeam that is encounters
-# and a count as the value
+# Create dictionary with each Betting Market as a Key, then have sub-dictionaries as values
+# for each Home Team that is encountered and a frequency count as their value
+# e.g.
+# {
+#     "Over 2.5 Goals": {
+#         "AFC Wimbledon": 1
+#     },
+#     "Home Win": {
+#         "Man United": 1
+#     },
+#     "BTTS": {
+#         "Everton": 4,
+#         "Arsenal": 2
+#     }
+# }
+
 parsed_dict = dict()
-for dictionary in raw_dicts:
+for dictionary in preds:
     bet = dictionary['Bet']
     if bet not in parsed_dict.keys():
         parsed_dict[bet] = dict()
@@ -18,16 +32,18 @@ for dictionary in raw_dicts:
         parsed_dict[bet][dictionary['Home Team']] = 0
     parsed_dict[bet][dictionary['Home Team']] += 1
 
-most_frequent_bet = ""
-most_frequent_team = ""
-highest_frequency = 0
+# print(parsed_dict)
+
 for bet in parsed_dict.keys():
+    market = bet
+    selection = ""
+    frequency = 0
     for team in parsed_dict[bet].keys():
-        if parsed_dict[bet][team] > highest_frequency:
-            most_frequent_bet = bet
-            most_frequent_team = team
-            highest_frequency = parsed_dict[bet][team]
-            
-            print(most_frequent_bet)
-            print(most_frequent_team)
-            print(highest_frequency)
+        if parsed_dict[bet][team] > frequency:
+            selection = team
+            frequency = parsed_dict[bet][team]
+
+    print(f"{market} - {selection}")
+    # print(market)
+    # print(selection)
+    # print(frequency)
